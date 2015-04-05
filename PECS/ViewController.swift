@@ -65,6 +65,11 @@ class ViewController: UIViewController {
         ]
         
         Alamofire.request(.POST, "http://shell.storm.pm:38027", parameters: parameters, encoding: .JSON)
+                 .response { (request, response, data, error) in
+                    println(request)
+                    println(response)
+                    println(error)
+        }
     }
     
     func saveChairState() {
