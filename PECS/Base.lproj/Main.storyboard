@@ -35,12 +35,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="HWy-kb-g1w">
-                                <rect key="frame" x="151" y="73" width="169" height="31"/>
+                                <rect key="frame" x="151" y="73" width="220" height="31"/>
                                 <variation key="widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="151" y="73" width="123" height="31"/>
                                 </variation>
                                 <connections>
                                     <action selector="heaterBackSliderChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="TcN-Y8-5ak"/>
+                                    <action selector="stateDidChange:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="0KZ-Yj-4GZ"/>
+                                    <action selector="stateDidChange:" destination="vXZ-lx-hvc" eventType="touchDragExit" id="kKa-H5-E81"/>
                                 </connections>
                             </slider>
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="fPn-n6-DoI">
@@ -50,6 +52,8 @@
                                 </variation>
                                 <connections>
                                     <action selector="heaterBottomSliderChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="7or-Z7-AJc"/>
+                                    <action selector="stateDidChange:" destination="vXZ-lx-hvc" eventType="touchDragExit" id="Fti-HR-rqT"/>
+                                    <action selector="stateDidChange:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Y5g-jY-FC2"/>
                                 </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fans" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PZl-wQ-TaW">
@@ -77,6 +81,8 @@
                                 </variation>
                                 <connections>
                                     <action selector="fanBackSliderChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="yNv-iE-9VD"/>
+                                    <action selector="stateDidChange:" destination="vXZ-lx-hvc" eventType="touchDragExit" id="qmT-n5-Vjq"/>
+                                    <action selector="stateDidChange:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="quB-lX-w4K"/>
                                 </connections>
                             </slider>
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="ws6-1c-3AB">
@@ -86,6 +92,8 @@
                                 </variation>
                                 <connections>
                                     <action selector="fanBottomSliderChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="9fw-H0-V12"/>
+                                    <action selector="stateDidChange:" destination="vXZ-lx-hvc" eventType="touchDragExit" id="72H-5F-4WC"/>
+                                    <action selector="stateDidChange:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="zL4-iL-LFZ"/>
                                 </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2f-km-laj">
@@ -116,7 +124,7 @@
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sqf-Ce-iL2">
-                                <rect key="frame" x="326" y="77" width="63" height="21"/>
+                                <rect key="frame" x="386" y="77" width="63" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -140,6 +148,7 @@
                                 </variation>
                                 <connections>
                                     <action selector="seatedSwitchClicked:" destination="vXZ-lx-hvc" eventType="touchUpOutside" id="RMy-Yr-N06"/>
+                                    <action selector="stateDidChange:" destination="vXZ-lx-hvc" eventType="touchUpOutside" id="l69-bM-wXd"/>
                                 </connections>
                             </switch>
                         </subviews>
@@ -159,10 +168,14 @@
                     </view>
                     <connections>
                         <outlet property="fanBackLabel" destination="Kb1-S2-EJH" id="FcB-nW-Ss2"/>
+                        <outlet property="fanBackSlider" destination="Yeh-os-tom" id="lDN-BE-BBF"/>
                         <outlet property="fanBottomLabel" destination="PAS-Rv-6T8" id="RVP-n1-Gcv"/>
+                        <outlet property="fanBottomSlider" destination="ws6-1c-3AB" id="Sol-eR-onC"/>
                         <outlet property="heaterBackLabel" destination="sqf-Ce-iL2" id="7Xj-lq-yTn"/>
                         <outlet property="heaterBackSlider" destination="HWy-kb-g1w" id="GEh-fq-IjC"/>
                         <outlet property="heaterBottomLabel" destination="L2f-km-laj" id="Wec-AD-gaa"/>
+                        <outlet property="heaterBottomSlider" destination="fPn-n6-DoI" id="syA-za-IQ8"/>
+                        <outlet property="seatedSwitch" destination="8eC-fl-wA6" id="fIr-CI-rnT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
