@@ -57,18 +57,67 @@ class ViewController: UIViewController {
     }
     @IBAction func stateDidChange(sender: AnyObject) {
         let parameters: [String: AnyObject] = [
-            "backFan": Int(self.fanBackSlider.value),
-            "bottomFan": Int(self.fanBottomSlider.value),
-            "backHeater": Int(self.heaterBackSlider.value),
-            "bottomHeater": Int(self.heaterBottomSlider.value),
-            "occupancy": self.seatedSwitch!.on
+            "macaddr": "12345",
+            "backh": Int(self.fanBackSlider.value),
+            "bottomh": Int(self.fanBottomSlider.value),
+            "backf": Int(self.heaterBackSlider.value),
+            "bottomf": Int(self.heaterBottomSlider.value),
         ]
         
-        Alamofire.request(.POST, "http://shell.storm.pm:38027", parameters: parameters, encoding: .JSON)
-                 .response { (request, response, data, error) in
+        Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
+                 .responseJSON { (request, response, data, error) in
                     println(request)
                     println(response)
+                    println(data)
                     println(error)
+        }
+    }
+    
+    @IBAction func syncWithSMAP(sender: AnyObject) {
+        let bottomHeater = "select data before now where uuid = a99daf41-f3b3-51a7-97bf-48fb3e7bf130"
+
+        let queries = [
+            [
+                "query": "select data before now where uuid = a99daf41-f3b3-51a7-97bf-48fb3e7bf130",
+                "slider": self.heaterBottomSlider,
+                "label": self.heaterBottomLabel
+            ],
+            [
+                "query": "select data before now where uuid = 33ecc20c-e636-58eb-863f-142717105075",
+                "slider": self.heaterBackSlider,
+                "label": self.heaterBackLabel
+            ],
+            [
+                "query": "select data before now where uuid = b7ef2e98-2e0a-515b-b534-69894fdddf6f",
+                "slider": self.fanBottomSlider,
+                "label": self.fanBottomLabel
+            ],
+            [
+                "query": "select data before now where uuid = 27e1e889-b749-5cf9-8f90-5cc5f1750ddf",
+                "slider": self.fanBackSlider,
+                "label": self.fanBackLabel
+            ]
+        ]
+        for info in queries {
+            let URL = NSURL(string: "http://shell.storm.pm:8079/api/query")!
+            let mutableURLRequest = NSMutableURLRequest(URL: URL)
+            mutableURLRequest.HTTPMethod = "POST"
+            
+            mutableURLRequest.HTTPBody = (info["query"] as! String).dataUsingEncoding(NSUTF8StringEncoding)
+            Alamofire.request(mutableURLRequest)
+                .responseJSON { (request, response, data , error) in
+                    println(data)
+                    if let respArr = data as? NSArray{
+                        if let resp = respArr[0] as? NSDictionary{
+                            if let readings = resp["Readings"] as? NSArray{
+                                if let values = readings[0] as? NSArray{
+                                    (info["slider"] as! UISlider).value = values[1] as! Float
+                                    (info["label"] as! UILabel).text = "\(values[1] as! Int)"
+                                }
+                            }
+                        }
+                    }
+            }
         }
     }
     
@@ -80,6 +129,7 @@ class ViewController: UIViewController {
         NSUserDefaults.standardUserDefaults().setInteger(Int(self.fanBottomSlider.value), forKey: "fanBottomSlider")
         NSUserDefaults.standardUserDefaults().setBool(self.seatedSwitch!.on, forKey: "seated")
     }
+
     func restoreChairState() {
         self.seatedSwitch!.on = NSUserDefaults.standardUserDefaults().boolForKey("seated")
         
