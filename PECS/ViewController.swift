@@ -8,16 +8,40 @@
 
 import UIKit
 import Alamofire
+import CoreBluetooth
 
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
+    var centralManager : CBCentralManager!
+    var sensorTagPeripheral : CBPeripheral!
+    var chair : Chair!
+    var availableChairs : NSMutableArray = []
 
+    @IBOutlet weak var chairLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.restoreChairState()
         // Do any additional setup after loading the view, typically from a nib.
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveSwitchesStates", name: "kSaveChairState", object: nil);
+        centralManager = CBCentralManager(delegate: self, queue: nil)
 
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveSwitchesStates", name: "kSaveChairState", object: nil);
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        if segue.identifier == "showBLEListSegue" {
+            var controller = segue.destinationViewController as! UINavigationController
+            var tableViewController = controller.viewControllers.first as! BLEListTableViewController
+            tableViewController.availableChairs = self.availableChairs
+        }
+    }
+    
+    @IBAction func unwindToMain(segue: UIStoryboardSegue) {
+        var source: BLEListTableViewController = segue.sourceViewController as! BLEListTableViewController
+        println(source.chosenChair)
+        if let chair = source.chosenChair {
+            self.chair = chair
+            self.chairLabel.text = chair.name as String
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,7 +60,7 @@ class ViewController: UIViewController {
     @IBAction func heaterBottomSliderChanged(sender: UISlider) {
         self.heaterBottomLabel.text = "\(Int(sender.value))"
     }
-    
+
     @IBOutlet weak var fanBackLabel: UILabel!
     @IBOutlet weak var fanBackSlider: UISlider!
     @IBAction func fanBackSliderChanged(sender: UISlider) {
@@ -58,12 +82,12 @@ class ViewController: UIViewController {
     @IBAction func stateDidChange(sender: AnyObject) {
         let parameters: [String: AnyObject] = [
             "macaddr": "12345",
-            "backh": Int(self.fanBackSlider.value),
-            "bottomh": Int(self.fanBottomSlider.value),
-            "backf": Int(self.heaterBackSlider.value),
-            "bottomf": Int(self.heaterBottomSlider.value),
+            "backf": Int(self.fanBackSlider.value),
+            "bottomf": Int(self.fanBottomSlider.value),
+            "backh": Int(self.heaterBackSlider.value),
+            "bottomh": Int(self.heaterBottomSlider.value),
         ]
-        
+
         Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
                  .responseJSON { (request, response, data, error) in
                     println(request)
@@ -72,7 +96,7 @@ class ViewController: UIViewController {
                     println(error)
         }
     }
-    
+
     @IBAction func syncWithSMAP(sender: AnyObject) {
         let bottomHeater = "select data before now where uuid = a99daf41-f3b3-51a7-97bf-48fb3e7bf130"
 
@@ -102,7 +126,7 @@ class ViewController: UIViewController {
             let URL = NSURL(string: "http://shell.storm.pm:8079/api/query")!
             let mutableURLRequest = NSMutableURLRequest(URL: URL)
             mutableURLRequest.HTTPMethod = "POST"
-            
+
             mutableURLRequest.HTTPBody = (info["query"] as! String).dataUsingEncoding(NSUTF8StringEncoding)
             Alamofire.request(mutableURLRequest)
                 .responseJSON { (request, response, data , error) in
@@ -132,20 +156,62 @@ class ViewController: UIViewController {
 
     func restoreChairState() {
         self.seatedSwitch!.on = NSUserDefaults.standardUserDefaults().boolForKey("seated")
-        
+
         var fanBottom = NSUserDefaults.standardUserDefaults().integerForKey("fanBottomSlider")
         self.fanBottomLabel.text = "\(fanBottom)"
         self.fanBottomSlider.value = Float(fanBottom)
         var fanBack = NSUserDefaults.standardUserDefaults().integerForKey("fanBackSlider")
         self.fanBackLabel.text = "\(fanBack)"
         self.fanBackSlider.value = Float(fanBottom)
-        
+
         var heaterBottom = NSUserDefaults.standardUserDefaults().integerForKey("heaterBottomSlider")
         self.heaterBottomLabel.text = "\(heaterBottom)"
         self.heaterBottomSlider.value = Float(heaterBottom)
         var heaterBack = NSUserDefaults.standardUserDefaults().integerForKey("heaterBackSlider")
         self.heaterBackLabel.text = "\(heaterBack)"
         self.heaterBackSlider.value = Float(heaterBack)
+    }
+    
+    // Check status of BLE hardware
+    func centralManagerDidUpdateState(central: CBCentralManager!) {
+        if central.state == CBCentralManagerState.PoweredOn {
+            // Scan for peripherals if BLE is turned on
+            central.scanForPeripheralsWithServices(nil, options: nil)
+        }
+        else {
+            // Can have different conditions for all states if needed - print generic message for now
+            println("Bluetooth switched off or not initialized")
+        }
+    }
+    
+    func centralManager(central: CBCentralManager!, didDiscoverPeripheral peripheral: CBPeripheral!, advertisementData: [NSObject : AnyObject]!, RSSI: NSNumber!) {
+        
+        let nameOfDeviceFound = (advertisementData as NSDictionary).objectForKey(CBAdvertisementDataLocalNameKey) as? String
+        
+        if nameOfDeviceFound != nil {
+            var chair = Chair(name: nameOfDeviceFound!, peripheral: peripheral)
+            self.availableChairs.addObject(chair)
+        }
+    }
+    
+    // Discover services of the peripheral
+    func centralManager(central: CBCentralManager!, didConnectPeripheral peripheral: CBPeripheral!) {
+        //self.bleStatusLabel.text = "Discovering peripheral services"
+        peripheral.discoverServices(nil)
+    }
+    
+    // Check if the service discovered is a valid IR Temperature Service
+    func peripheral(peripheral: CBPeripheral!, didDiscoverServices error: NSError!) {
+        //self.bleStatusLabel.text = "Looking at peripheral services"
+        for service in peripheral.services {
+            let thisService = service as! CBService
+//            if service.UUID == IRTemperatureServiceUUID {
+//                // Discover characteristics of IR Temperature Service
+//                peripheral.discoverCharacteristics(nil, forService: thisService)
+//            }
+            // Uncomment to print list of UUIDs
+            println(thisService.UUID)
+        }
     }
 }
 

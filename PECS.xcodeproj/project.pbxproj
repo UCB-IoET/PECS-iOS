@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0273525B1AE812BC0038FCDB /* BLEListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0273525A1AE812BC0038FCDB /* BLEListTableViewController.swift */; };
+		0273525D1AE819740038FCDB /* Chair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0273525C1AE819740038FCDB /* Chair.swift */; };
 		02D374D61AD0A16500167CC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D374D51AD0A16500167CC4 /* AppDelegate.swift */; };
 		02D374D81AD0A16500167CC4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D374D71AD0A16500167CC4 /* ViewController.swift */; };
 		02D374DB1AD0A16500167CC4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02D374D91AD0A16500167CC4 /* Main.storyboard */; };
@@ -27,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0273525A1AE812BC0038FCDB /* BLEListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEListTableViewController.swift; sourceTree = "<group>"; };
+		0273525C1AE819740038FCDB /* Chair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chair.swift; sourceTree = "<group>"; };
 		02D374D01AD0A16500167CC4 /* PECS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PECS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02D374D41AD0A16500167CC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		02D374D51AD0A16500167CC4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -86,6 +90,8 @@
 			children = (
 				02D374D51AD0A16500167CC4 /* AppDelegate.swift */,
 				02D374D71AD0A16500167CC4 /* ViewController.swift */,
+				0273525A1AE812BC0038FCDB /* BLEListTableViewController.swift */,
+				0273525C1AE819740038FCDB /* Chair.swift */,
 				02D374D91AD0A16500167CC4 /* Main.storyboard */,
 				02D374DC1AD0A16500167CC4 /* Images.xcassets */,
 				02D374DE1AD0A16500167CC4 /* LaunchScreen.xib */,
@@ -188,6 +194,7 @@
 				TargetAttributes = {
 					02D374CF1AD0A16500167CC4 = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = EPKADUA68X;
 					};
 					02D374E41AD0A16500167CC4 = {
 						CreatedOnToolsVersion = 6.2;
@@ -288,6 +295,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				02D374D81AD0A16500167CC4 /* ViewController.swift in Sources */,
+				0273525D1AE819740038FCDB /* Chair.swift in Sources */,
+				0273525B1AE812BC0038FCDB /* BLEListTableViewController.swift in Sources */,
 				02D374D61AD0A16500167CC4 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -364,7 +373,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -400,7 +409,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -412,9 +421,12 @@
 			baseConfigurationReference = 0BD6674D81F713781DB8714A /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = PECS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -423,9 +435,12 @@
 			baseConfigurationReference = BF86C2A9C6A2343CA151919A /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = PECS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
