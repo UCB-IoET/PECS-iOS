@@ -13,11 +13,20 @@ import CoreBluetooth
 class Chair: NSObject{
     
     var name: NSString = ""
-    var peripheral: CBPeripheral?
+    var peripheral: CBPeripheral!
+    var rssi: NSNumber!
+    var characteristic: CBCharacteristic!
     
-    init(name: String, peripheral: CBPeripheral){
+    init(name: String, peripheral: CBPeripheral, rssi: NSNumber!){
         self.name = name
         self.peripheral = peripheral
+        self.rssi = rssi
+    }
+    
+    func sendData() {
+        var enableValue = 1
+        let enableBytes = NSData(bytes: &enableValue, length: sizeof(UInt8))
+        self.peripheral.writeValue(enableBytes, forCharacteristic: self.characteristic, type: CBCharacteristicWriteType.WithResponse)
     }
     
 }

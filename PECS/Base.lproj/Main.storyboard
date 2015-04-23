@@ -174,38 +174,13 @@
                                     <rect key="frame" x="295" y="121" width="32" height="21"/>
                                 </variation>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Seated" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FQZ-xE-xe3">
-                                <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="16" y="347" width="55" height="21"/>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="16" y="391" width="55" height="21"/>
-                                </variation>
-                            </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8eC-fl-wA6">
-                                <rect key="frame" x="-25" y="-15" width="51" height="31"/>
-                                <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="278" y="337" width="51" height="31"/>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="278" y="381" width="51" height="31"/>
-                                </variation>
-                                <connections>
-                                    <action selector="seatedSwitchClicked:" destination="vXZ-lx-hvc" eventType="touchUpOutside" id="RMy-Yr-N06"/>
-                                    <action selector="stateDidChange:" destination="vXZ-lx-hvc" eventType="touchUpOutside" id="l69-bM-wXd"/>
-                                </connections>
-                            </switch>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pKz-ag-NRT">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <state key="normal" title="Sync with SMAP">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="20" y="429" width="115" height="30"/>
+                                    <rect key="frame" x="20" y="358" width="115" height="30"/>
                                 </variation>
                                 <connections>
                                     <action selector="syncWithSMAP:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="iCH-kl-1rC"/>
@@ -217,7 +192,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="16" y="487" width="113" height="21"/>
+                                    <rect key="frame" x="16" y="416" width="113" height="21"/>
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="None" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ysx-xB-0Sg">
@@ -226,24 +201,29 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="153" y="487" width="41" height="21"/>
+                                    <rect key="frame" x="153" y="416" width="139" height="21"/>
                                 </variation>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="05N-FK-8xd">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <state key="normal" title="Disconnect">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="295" y="412" width="78" height="30"/>
+                                </variation>
+                                <connections>
+                                    <action selector="disconnectFromChair:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="UUt-iz-0ln"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="FQZ-xE-xe3"/>
-                                <exclude reference="8eC-fl-wA6"/>
                                 <exclude reference="pKz-ag-NRT"/>
                                 <exclude reference="iX2-IW-EIm"/>
                                 <exclude reference="ysx-xB-0Sg"/>
-                            </mask>
-                        </variation>
-                        <variation key="widthClass=compact">
-                            <mask key="subviews">
-                                <include reference="FQZ-xE-xe3"/>
-                                <include reference="8eC-fl-wA6"/>
+                                <exclude reference="05N-FK-8xd"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -251,6 +231,7 @@
                                 <include reference="pKz-ag-NRT"/>
                                 <include reference="iX2-IW-EIm"/>
                                 <include reference="ysx-xB-0Sg"/>
+                                <include reference="05N-FK-8xd"/>
                             </mask>
                         </variation>
                     </view>
@@ -263,6 +244,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="chairLabel" destination="ysx-xB-0Sg" id="pYz-Wh-Qz0"/>
+                        <outlet property="disconnectFromChairButton" destination="05N-FK-8xd" id="hA0-M4-3Ls"/>
                         <outlet property="fanBackLabel" destination="Kb1-S2-EJH" id="FcB-nW-Ss2"/>
                         <outlet property="fanBackSlider" destination="Yeh-os-tom" id="lDN-BE-BBF"/>
                         <outlet property="fanBottomLabel" destination="PAS-Rv-6T8" id="RVP-n1-Gcv"/>
@@ -271,7 +253,6 @@
                         <outlet property="heaterBackSlider" destination="HWy-kb-g1w" id="GEh-fq-IjC"/>
                         <outlet property="heaterBottomLabel" destination="L2f-km-laj" id="Wec-AD-gaa"/>
                         <outlet property="heaterBottomSlider" destination="fPn-n6-DoI" id="syA-za-IQ8"/>
-                        <outlet property="seatedSwitch" destination="8eC-fl-wA6" id="fIr-CI-rnT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -283,6 +264,7 @@
             <objects>
                 <tableViewController id="eRR-zY-JHE" customClass="BLEListTableViewController" customModule="PECS" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Z9Z-yD-XRP">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -305,6 +287,11 @@
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="VsG-NY-7sL">
                             <connections>
                                 <segue destination="dh5-gn-lgP" kind="unwind" unwindAction="unwindToMain:" id="Wfx-7P-LYy"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Scan" id="FJQ-DB-eXx">
+                            <connections>
+                                <action selector="scanForPeripherals:" destination="eRR-zY-JHE" id="Y90-8X-Hzz"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

@@ -16,6 +16,9 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     var sensorTagPeripheral : CBPeripheral!
     var chair : Chair!
     var availableChairs : NSMutableArray = []
+    var tableViewController : BLEListTableViewController?
+    @IBOutlet weak var disconnectFromChairButton: UIButton!
+
 
     @IBOutlet weak var chairLabel: UILabel!
     override func viewDidLoad() {
@@ -23,24 +26,40 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         self.restoreChairState()
         // Do any additional setup after loading the view, typically from a nib.
         centralManager = CBCentralManager(delegate: self, queue: nil)
+        disconnectFromChairButton.hidden = true
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveSwitchesStates", name: "kSaveChairState", object: nil);
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveChairState", name: "kSaveChairState", object: nil);
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if segue.identifier == "showBLEListSegue" {
             var controller = segue.destinationViewController as! UINavigationController
-            var tableViewController = controller.viewControllers.first as! BLEListTableViewController
-            tableViewController.availableChairs = self.availableChairs
+
+            self.tableViewController = controller.viewControllers.first as? BLEListTableViewController
+            self.tableViewController!.centralManager = self.centralManager
+            self.tableViewController!.availableChairs = self.availableChairs
         }
     }
     
+    
     @IBAction func unwindToMain(segue: UIStoryboardSegue) {
+        self.tableViewController = nil
         var source: BLEListTableViewController = segue.sourceViewController as! BLEListTableViewController
-        println(source.chosenChair)
         if let chair = source.chosenChair {
             self.chair = chair
             self.chairLabel.text = chair.name as String
+            self.centralManager.stopScan()
+            self.chair.peripheral.delegate = self
+            self.centralManager.connectPeripheral(chair.peripheral, options: nil)
+            disconnectFromChairButton.hidden = false
+        }
+    }
+    @IBAction func disconnectFromChair(sender: AnyObject) {
+        if self.chair != nil {
+            self.centralManager.cancelPeripheralConnection(self.chair.peripheral)
+            self.chair = nil
+            self.disconnectFromChairButton.hidden = true
+            self.chairLabel.text = "None"
         }
     }
 
@@ -71,14 +90,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     @IBAction func fanBottomSliderChanged(sender: UISlider) {
         self.fanBottomLabel.text = "\(Int(sender.value))"
     }
-    @IBOutlet weak var seatedSwitch: UISwitch!
-    @IBAction func seatedSwitchClicked(sender: UISwitch) {
-        if sender.on {
-            sender.setOn(false, animated:true)
-        } else {
-            sender.setOn(true, animated:true)
-        }
-    }
+
     @IBAction func stateDidChange(sender: AnyObject) {
         let parameters: [String: AnyObject] = [
             "macaddr": "12345",
@@ -151,11 +163,9 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         NSUserDefaults.standardUserDefaults().setInteger(Int(self.fanBackSlider.value), forKey: "fanBackSlider")
         NSUserDefaults.standardUserDefaults().setInteger(Int(self.fanBottomSlider.value), forKey: "fanBottomSlider")
         NSUserDefaults.standardUserDefaults().setInteger(Int(self.fanBottomSlider.value), forKey: "fanBottomSlider")
-        NSUserDefaults.standardUserDefaults().setBool(self.seatedSwitch!.on, forKey: "seated")
     }
 
     func restoreChairState() {
-        self.seatedSwitch!.on = NSUserDefaults.standardUserDefaults().boolForKey("seated")
 
         var fanBottom = NSUserDefaults.standardUserDefaults().integerForKey("fanBottomSlider")
         self.fanBottomLabel.text = "\(fanBottom)"
@@ -185,32 +195,64 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     }
     
     func centralManager(central: CBCentralManager!, didDiscoverPeripheral peripheral: CBPeripheral!, advertisementData: [NSObject : AnyObject]!, RSSI: NSNumber!) {
-        
-        let nameOfDeviceFound = (advertisementData as NSDictionary).objectForKey(CBAdvertisementDataLocalNameKey) as? String
-        
-        if nameOfDeviceFound != nil {
-            var chair = Chair(name: nameOfDeviceFound!, peripheral: peripheral)
-            self.availableChairs.addObject(chair)
+
+        if peripheral.name != nil {
+            var found = false
+            for chair in availableChairs {
+                if chair.name == peripheral.name {
+                    found = true
+                    (chair as! Chair).rssi = RSSI
+                    break
+                }
+            }
+            if found == false {
+                var chair = Chair(name: peripheral.name, peripheral: peripheral, rssi: RSSI)
+                self.availableChairs.addObject(chair)
+            }
+            if self.tableViewController != nil {
+                println("Reloading data")
+                self.tableViewController!.availableChairs = self.availableChairs
+                self.tableViewController!.tableView.reloadData()
+            }
         }
     }
     
     // Discover services of the peripheral
     func centralManager(central: CBCentralManager!, didConnectPeripheral peripheral: CBPeripheral!) {
-        //self.bleStatusLabel.text = "Discovering peripheral services"
+        println("Discovering services")
         peripheral.discoverServices(nil)
     }
     
-    // Check if the service discovered is a valid IR Temperature Service
+    let ChairServiceUUID = CBUUID(string: "FFE0")
+    let ChairCharUUID = CBUUID(string: "FFE1")
+
+    
     func peripheral(peripheral: CBPeripheral!, didDiscoverServices error: NSError!) {
-        //self.bleStatusLabel.text = "Looking at peripheral services"
+        println("Looking for services")
         for service in peripheral.services {
             let thisService = service as! CBService
-//            if service.UUID == IRTemperatureServiceUUID {
-//                // Discover characteristics of IR Temperature Service
-//                peripheral.discoverCharacteristics(nil, forService: thisService)
-//            }
-            // Uncomment to print list of UUIDs
             println(thisService.UUID)
+            if thisService.UUID == ChairServiceUUID {
+                peripheral.discoverCharacteristics(nil, forService: thisService)
+            }
+        }
+    }
+    func peripheral(peripheral: CBPeripheral!, didDiscoverCharacteristicsForService service: CBService!, error: NSError!) {
+        println("Looking for characteristic")
+        for charateristic in service.characteristics {
+            let thisCharacteristic = charateristic as! CBCharacteristic
+            println(thisCharacteristic.UUID)
+            if thisCharacteristic.UUID == ChairCharUUID {
+                self.chair.characteristic = thisCharacteristic
+                self.chair.peripheral.setNotifyValue(true, forCharacteristic: thisCharacteristic)
+            }
+        }
+    }
+    
+    func peripheral(peripheral: CBPeripheral!, didUpdateValueForCharacteristic characteristic: CBCharacteristic!, error: NSError!) {
+        println("Received value")
+        if characteristic.UUID == ChairCharUUID {
+            println(characteristic.value)
         }
     }
 }

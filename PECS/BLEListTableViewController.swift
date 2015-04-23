@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import CoreBluetooth
 
 class BLEListTableViewController : UITableViewController {
 
     var availableChairs : NSMutableArray = []
     var chosenChair: Chair?
+    var centralManager : CBCentralManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +33,10 @@ class BLEListTableViewController : UITableViewController {
         }
     }
     
+    @IBAction func scanForPeripherals(sender: AnyObject!) {
+        self.centralManager.scanForPeripheralsWithServices(nil, options: nil)
+    }
+    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -43,7 +49,7 @@ class BLEListTableViewController : UITableViewController {
         let CellIndentifier: NSString = "ListPrototypeCell"
         var cell : UITableViewCell = tableView.dequeueReusableCellWithIdentifier(CellIndentifier as String) as! UITableViewCell
         var chair: Chair = self.availableChairs.objectAtIndex(indexPath.row) as! Chair
-        cell.textLabel?.text = chair.name as String
+        cell.textLabel?.text = "\(chair.name as String) - RSSI: \(chair.rssi)"
         return cell
     }
     
