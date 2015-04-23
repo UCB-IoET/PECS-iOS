@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		020EA5191AE998C600454B73 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020EA5181AE998C600454B73 /* BLEManager.swift */; };
 		0273525B1AE812BC0038FCDB /* BLEListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0273525A1AE812BC0038FCDB /* BLEListTableViewController.swift */; };
 		0273525D1AE819740038FCDB /* Chair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0273525C1AE819740038FCDB /* Chair.swift */; };
 		02D374D61AD0A16500167CC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D374D51AD0A16500167CC4 /* AppDelegate.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		020EA5181AE998C600454B73 /* BLEManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 		0273525A1AE812BC0038FCDB /* BLEListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEListTableViewController.swift; sourceTree = "<group>"; };
 		0273525C1AE819740038FCDB /* Chair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chair.swift; sourceTree = "<group>"; };
 		02D374D01AD0A16500167CC4 /* PECS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PECS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,6 +94,7 @@
 				02D374D71AD0A16500167CC4 /* ViewController.swift */,
 				0273525A1AE812BC0038FCDB /* BLEListTableViewController.swift */,
 				0273525C1AE819740038FCDB /* Chair.swift */,
+				020EA5181AE998C600454B73 /* BLEManager.swift */,
 				02D374D91AD0A16500167CC4 /* Main.storyboard */,
 				02D374DC1AD0A16500167CC4 /* Images.xcassets */,
 				02D374DE1AD0A16500167CC4 /* LaunchScreen.xib */,
@@ -296,6 +299,7 @@
 			files = (
 				02D374D81AD0A16500167CC4 /* ViewController.swift in Sources */,
 				0273525D1AE819740038FCDB /* Chair.swift in Sources */,
+				020EA5191AE998C600454B73 /* BLEManager.swift in Sources */,
 				0273525B1AE812BC0038FCDB /* BLEListTableViewController.swift in Sources */,
 				02D374D61AD0A16500167CC4 /* AppDelegate.swift in Sources */,
 			);
