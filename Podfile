@@ -3,3 +3,5 @@ platform :ios, '8.0'
 use_frameworks!
 
 pod 'Alamofire', '~> 1.1'
+pod 'Starscream', '~> 0.9.2'
+pod "SwiftyJSON", "~> 2.2"

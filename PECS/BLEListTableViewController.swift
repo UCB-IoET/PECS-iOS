@@ -37,6 +37,7 @@ class BLEListTableViewController : UITableViewController {
     
     @IBAction func scanForPeripherals(sender: AnyObject!) {
         bleManager.scan()
+        self.tableView.reloadData()
     }
     
     func reloadView() {
