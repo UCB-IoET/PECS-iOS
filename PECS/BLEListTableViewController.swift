@@ -25,6 +25,7 @@ class BLEListTableViewController : UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    // Called either when the cancel button is tapped or an item in the list is chosen.
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if bleManager.availableChairs.count > 0 {
             var indexPath = self.tableView.indexPathForSelectedRow()
@@ -35,6 +36,7 @@ class BLEListTableViewController : UITableViewController {
         }
     }
     
+    // Trigger a new scan to refresh list of available peripherals
     @IBAction func scanForPeripherals(sender: AnyObject!) {
         bleManager.scan()
         self.tableView.reloadData()
@@ -52,6 +54,7 @@ class BLEListTableViewController : UITableViewController {
         return bleManager.availableChairs.count
     }
     
+    // Display nearby chairs and their RSSI value
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let CellIndentifier: NSString = "ListPrototypeCell"
         var cell : UITableViewCell = tableView.dequeueReusableCellWithIdentifier(CellIndentifier as String) as! UITableViewCell

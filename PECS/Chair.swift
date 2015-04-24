@@ -29,8 +29,8 @@ class Chair: NSObject, CBPeripheralDelegate {
     }
     
     func sendData() {
-        var enableValue : [UInt8] = [1, 2, 3]
-        let enableBytes = NSData(bytes: &enableValue, length: 3 * sizeof(UInt8))
+        var enableValue = 1
+        let enableBytes = NSData(bytes: &enableValue, length: sizeof(UInt8))
         self.peripheral.writeValue(enableBytes, forCharacteristic: self.characteristic, type: CBCharacteristicWriteType.WithResponse)
     }
     
@@ -53,7 +53,6 @@ class Chair: NSObject, CBPeripheralDelegate {
             if thisCharacteristic.UUID == ChairCharUUID {
                 self.characteristic = thisCharacteristic
                 self.peripheral.setNotifyValue(true, forCharacteristic: thisCharacteristic)
-                sendData()
             }
         }
     }

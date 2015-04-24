@@ -23,23 +23,26 @@ class ViewController: UIViewController {
     @IBOutlet weak var chairLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        disconnectFromChairButton.hidden = true
+        disconnectFromChairButton.hidden = self.chair == nil
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChairView", name: "kChairStateUpdate", object: nil);
     }
-
     
+    // Called when the list of nearby chairs view is closed.
     @IBAction func unwindToMain(segue: UIStoryboardSegue) {
         self.tableViewController = nil
         var source: BLEListTableViewController = segue.sourceViewController as! BLEListTableViewController
+        
+        // If a chair was chosen from the list
         if let chair = source.chosenChair {
             self.chair = chair
             self.chairLabel.text = chair.name as String
+            // Connect to the BLE peripheral associated with the chair
             self.bleManager.centralManager.connectPeripheral(chair.peripheral, options: nil)
             disconnectFromChairButton.hidden = false
         }
     }
     
+    // Disconnect from the current chair peripheral
     @IBAction func disconnectFromChair(sender: AnyObject) {
         if self.chair != nil {
             self.bleManager.centralManager.cancelPeripheralConnection(self.chair.peripheral)
@@ -77,6 +80,7 @@ class ViewController: UIViewController {
         self.fanBottomLabel.text = "\(Int(sender.value))"
     }
 
+    // Update SMAP when the state of the chair changes
     @IBAction func stateDidChange(sender: AnyObject) {
         let parameters: [String: AnyObject] = [
             "macaddr": "12345",
