@@ -39,6 +39,10 @@ class Chair: NSObject, CBPeripheralDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChair", name: "kChairStateUpdateFromSmap", object: nil);
     }
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     func updateChair() {
         self.heaterBack = self.smapService.heaterBack
         self.heaterBottom = self.smapService.heaterBottom
