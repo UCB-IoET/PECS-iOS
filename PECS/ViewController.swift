@@ -24,7 +24,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         disconnectFromChairButton.hidden = self.chair == nil
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChairView", name: "kChairStateUpdate", object: nil);
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChairViewFromSmap", name: "kChairStateUpdateFromSmap", object: nil);
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChairViewFromChair", name: "kChairStateUpdateFromChair", object: nil);
     }
     
     // Called when the list of nearby chairs view is closed.
@@ -91,7 +92,7 @@ class ViewController: UIViewController {
         ]
 
         Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
-                 .responseJSON { (request, response, data, error) in
+                 .response { (request, response, data, error) in
                     println(request)
                     println(response)
                     println(data)
@@ -99,18 +100,36 @@ class ViewController: UIViewController {
         }
     }
     
-    func updateChairView() {
-        self.fanBackSlider.value = Float(self.smapService.fanBack)
-        self.fanBackLabel.text = "\(self.smapService.fanBack)"
+    func updateChairViewFromSmap() {
+        if self.chair != nil {
+            self.fanBackSlider.value = Float(self.smapService.fanBack)
+            self.fanBackLabel.text = "\(self.smapService.fanBack)"
 
-        self.fanBottomSlider.value = Float(self.smapService.fanBottom)
-        self.fanBottomLabel.text = "\(self.smapService.fanBottom)"
-        
-        self.heaterBackSlider.value = Float(self.smapService.heaterBack)
-        self.heaterBackLabel.text = "\(self.smapService.heaterBack)"
-        
-        self.heaterBottomSlider.value = Float(self.smapService.heaterBottom)
-        self.heaterBottomLabel.text = "\(self.smapService.heaterBottom)"
+            self.fanBottomSlider.value = Float(self.smapService.fanBottom)
+            self.fanBottomLabel.text = "\(self.smapService.fanBottom)"
+            
+            self.heaterBackSlider.value = Float(self.smapService.heaterBack)
+            self.heaterBackLabel.text = "\(self.smapService.heaterBack)"
+            
+            self.heaterBottomSlider.value = Float(self.smapService.heaterBottom)
+            self.heaterBottomLabel.text = "\(self.smapService.heaterBottom)"
+        }
+    }
+    
+    func updateChairViewFromChair() {
+        if self.chair != nil {
+            self.fanBackSlider.value = Float(self.chair.fanBack)
+            self.fanBackLabel.text = "\(self.chair.fanBack)"
+            
+            self.fanBottomSlider.value = Float(self.chair.fanBottom)
+            self.fanBottomLabel.text = "\(self.chair.fanBottom)"
+            
+            self.heaterBackSlider.value = Float(self.chair.heaterBack)
+            self.heaterBackLabel.text = "\(self.chair.heaterBack)"
+            
+            self.heaterBottomSlider.value = Float(self.chair.heaterBottom)
+            self.heaterBottomLabel.text = "\(self.chair.heaterBottom)"
+        }
     }
 }
 
