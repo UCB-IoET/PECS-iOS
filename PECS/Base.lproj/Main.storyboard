@@ -192,37 +192,23 @@
                                     <rect key="frame" x="153" y="366" width="139" height="21"/>
                                 </variation>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="05N-FK-8xd">
-                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                <state key="normal" title="Disconnect">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="285" y="362" width="78" height="30"/>
-                                </variation>
-                                <connections>
-                                    <action selector="disconnectFromChair:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="UUt-iz-0ln"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="iX2-IW-EIm"/>
                                 <exclude reference="ysx-xB-0Sg"/>
-                                <exclude reference="05N-FK-8xd"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="subviews">
                                 <include reference="iX2-IW-EIm"/>
                                 <include reference="ysx-xB-0Sg"/>
-                                <include reference="05N-FK-8xd"/>
                             </mask>
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" title="PECS" id="XA6-ya-YIj">
-                        <barButtonItem key="rightBarButtonItem" title="Pair" id="fqR-z5-BlJ">
+                        <barButtonItem key="rightBarButtonItem" title="Disconnect" id="fqR-z5-BlJ">
                             <connections>
                                 <segue destination="TbN-dY-N4X" kind="showDetail" identifier="showBLEListSegue" id="Q72-SK-BSu"/>
                             </connections>
@@ -230,7 +216,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="chairLabel" destination="ysx-xB-0Sg" id="pYz-Wh-Qz0"/>
-                        <outlet property="disconnectFromChairButton" destination="05N-FK-8xd" id="hA0-M4-3Ls"/>
                         <outlet property="fanBackLabel" destination="Kb1-S2-EJH" id="FcB-nW-Ss2"/>
                         <outlet property="fanBackSlider" destination="Yeh-os-tom" id="lDN-BE-BBF"/>
                         <outlet property="fanBottomLabel" destination="PAS-Rv-6T8" id="RVP-n1-Gcv"/>
@@ -245,7 +230,7 @@
             </objects>
             <point key="canvasLocation" x="849" y="144"/>
         </scene>
-        <!--List Table View Controller-->
+        <!--Select your Chair-->
         <scene sceneID="f8H-wg-uwm">
             <objects>
                 <tableViewController id="eRR-zY-JHE" customClass="BLEListTableViewController" customModule="PECS" customModuleProvider="target" sceneMemberID="viewController">
@@ -254,10 +239,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ListPrototypeCell" id="fQh-Jw-bfK">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ListPrototypeCell" textLabel="UTI-sY-ObF" detailTextLabel="uW4-NN-1Sm" style="IBUITableViewCellStyleValue1" id="fQh-Jw-bfK">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fQh-Jw-bfK" id="uwn-5q-OXV">
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="UTI-sY-ObF">
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                            <variation key="heightClass=regular-widthClass=compact">
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            </variation>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="uW4-NN-1Sm">
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                            <variation key="heightClass=regular-widthClass=compact">
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            </variation>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
                                 <connections>
                                     <segue destination="dh5-gn-lgP" kind="unwind" unwindAction="unwindToMain:" id="Pda-Wn-nss"/>
@@ -269,12 +274,7 @@
                             <outlet property="delegate" destination="eRR-zY-JHE" id="taB-sy-uag"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="43a-Qy-rBi">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="VsG-NY-7sL">
-                            <connections>
-                                <segue destination="dh5-gn-lgP" kind="unwind" unwindAction="unwindToMain:" id="Wfx-7P-LYy"/>
-                            </connections>
-                        </barButtonItem>
+                    <navigationItem key="navigationItem" title="Select your Chair" id="43a-Qy-rBi">
                         <barButtonItem key="rightBarButtonItem" title="Scan" id="FJQ-DB-eXx">
                             <connections>
                                 <action selector="scanForPeripherals:" destination="eRR-zY-JHE" id="Y90-8X-Hzz"/>

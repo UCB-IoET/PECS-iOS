@@ -17,15 +17,17 @@ class ViewController: UIViewController {
     let smapService = (UIApplication.sharedApplication().delegate as! AppDelegate).smapService
     var chair : Chair!
     var tableViewController : BLEListTableViewController?
-    @IBOutlet weak var disconnectFromChairButton: UIButton!
 
 
     @IBOutlet weak var chairLabel: UILabel!
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        disconnectFromChairButton.hidden = self.chair == nil
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChairViewFromSmap", name: "kChairStateUpdateFromSmap", object: nil);
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChairViewFromChair", name: "kChairStateUpdateFromChair", object: nil);
+        print(self.chair)
+        if self.chair == nil {
+            performSegueWithIdentifier("showBLEListSegue", sender: self)
+        }
     }
     
     // Called when the list of nearby chairs view is closed.
@@ -39,16 +41,15 @@ class ViewController: UIViewController {
             self.chairLabel.text = chair.name as String
             // Connect to the BLE peripheral associated with the chair
             self.bleManager.centralManager.connectPeripheral(chair.peripheral, options: nil)
-            disconnectFromChairButton.hidden = false
         }
     }
     
-    // Disconnect from the current chair peripheral
-    @IBAction func disconnectFromChair(sender: AnyObject) {
-        if self.chair != nil {
-            self.bleManager.centralManager.cancelPeripheralConnection(self.chair.peripheral)
-            self.chair = nil
-            self.disconnectFromChairButton.hidden = true
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "showBLEListSegue" {
+            if self.chair != nil {
+                self.bleManager.centralManager.cancelPeripheralConnection(self.chair.peripheral)
+                self.chair = nil
+            }
             self.chairLabel.text = "None"
         }
     }

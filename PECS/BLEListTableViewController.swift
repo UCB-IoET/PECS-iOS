@@ -59,7 +59,8 @@ class BLEListTableViewController : UITableViewController {
         let CellIndentifier: NSString = "ListPrototypeCell"
         var cell : UITableViewCell = tableView.dequeueReusableCellWithIdentifier(CellIndentifier as String) as! UITableViewCell
         var chair: Chair = bleManager.availableChairs.objectAtIndex(indexPath.row) as! Chair
-        cell.textLabel?.text = "\(chair.name as String) - RSSI: \(chair.rssi)"
+        cell.textLabel?.text = "\(chair.name as String)"
+        cell.detailTextLabel?.text = "RSSI: \(chair.rssi)"
         if chair == self.chosenChair {
             cell.accessoryType = .Checkmark
         } else {
