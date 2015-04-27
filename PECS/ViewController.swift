@@ -24,7 +24,6 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChairViewFromSmap", name: "kChairStateUpdateFromSmap", object: nil);
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChairViewFromChair", name: "kChairStateUpdateFromChair", object: nil);
-        print(self.chair)
         if self.chair == nil {
             performSegueWithIdentifier("showBLEListSegue", sender: self)
         }
@@ -84,21 +83,12 @@ class ViewController: UIViewController {
 
     // Update SMAP when the state of the chair changes
     @IBAction func stateDidChange(sender: AnyObject) {
-        let parameters: [String: AnyObject] = [
-            "macaddr": "12345",
-            "backf": Int(self.fanBackSlider.value),
-            "bottomf": Int(self.fanBottomSlider.value),
-            "backh": Int(self.heaterBackSlider.value),
-            "bottomh": Int(self.heaterBottomSlider.value),
-        ]
-
-        Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
-                 .response { (request, response, data, error) in
-                    println(request)
-                    println(response)
-                    println(data)
-                    println(error)
-        }
+        self.smapService.fanBack = Int(self.fanBackSlider.value)
+        self.smapService.fanBottom = Int(self.fanBottomSlider.value)
+        self.smapService.heaterBack = Int(self.heaterBackSlider.value)
+        self.smapService.heaterBottom = Int(self.heaterBottomSlider.value)
+        self.smapService.update()
+        self.chair.updateChair()
     }
     
     func updateChairViewFromSmap() {

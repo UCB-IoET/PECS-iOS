@@ -10,6 +10,7 @@ import Foundation
 import Starscream
 import SwiftyJSON
 import UIKit
+import Alamofire
 
 
 class SMAPService: NSObject, WebSocketDelegate {
@@ -18,12 +19,16 @@ class SMAPService: NSObject, WebSocketDelegate {
     var fanBottom    : Int
     var heaterBack   : Int
     var heaterBottom : Int
+    
+    var disableUpdates : Bool
+    var disableUpdatesEndTime : dispatch_time_t?
 
     override init() {
         fanBack      = 0
         fanBottom    = 0
         heaterBack   = 0
         heaterBottom = 0
+        disableUpdates = false
         super.init()
         socket.delegate = self
         socket.connect()
@@ -46,6 +51,9 @@ class SMAPService: NSObject, WebSocketDelegate {
     }
     
     func websocketDidReceiveMessage(ws: WebSocket, text: String) {
+        if self.disableUpdates {
+            return
+        }
         let data = JSON(data: text.dataUsingEncoding(NSUTF8StringEncoding)!)
         let uuid = data["UUID"].stringValue
         let value = data["Readings"][0][1]
@@ -63,6 +71,35 @@ class SMAPService: NSObject, WebSocketDelegate {
             
         }
         NSNotificationCenter.defaultCenter().postNotificationName("kChairStateUpdateFromSmap", object: nil);
+        self.update()
+    }
+    
+    func update() {
+        let parameters: [String: AnyObject] = [
+            "macaddr": "12345",
+            "backf": Int(self.fanBack),
+            "bottomf": Int(self.fanBottom),
+            "backh": Int(self.heaterBack),
+            "bottomh": Int(self.heaterBottom),
+        ]
+        Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
+                 .response { (request, response, data, error) in
+                    if error != nil {
+                        println("Error updating smap")
+                        println(request)
+                        println(response)
+                        println(data)
+                        println(error)
+                    }
+        }
+        self.disableUpdates = true
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(10 * Double(NSEC_PER_SEC)))
+        self.disableUpdatesEndTime = delayTime
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            if self.disableUpdatesEndTime == delayTime {
+                self.disableUpdates = false
+            }
+        }
     }
     
     func websocketDidReceiveData(ws: WebSocket, data: NSData) {
