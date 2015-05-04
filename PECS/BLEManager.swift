@@ -40,7 +40,11 @@ class BLEManager: NSObject, CBCentralManagerDelegate {
     }
     
     func centralManager(central: CBCentralManager!, didDiscoverPeripheral peripheral: CBPeripheral!, advertisementData: [NSObject : AnyObject]!, RSSI: NSNumber!) {
-        let nameOfDeviceFound = (advertisementData as NSDictionary).objectForKey(CBAdvertisementDataLocalNameKey) as? String
+        let advert = advertisementData as NSDictionary
+        let nameOfDeviceFound = advert.objectForKey(CBAdvertisementDataLocalNameKey) as? String
+        println(advert)
+        println(peripheral)
+        
         if peripheral.name != nil && nameOfDeviceFound != nil {
             var chair = Chair(name: nameOfDeviceFound!, peripheral: peripheral, rssi: RSSI)
             self.availableChairs.addObject(chair)

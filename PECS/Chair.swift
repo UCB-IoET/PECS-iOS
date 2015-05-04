@@ -56,7 +56,7 @@ class Chair: NSObject, CBPeripheralDelegate {
     }
     
     func sendData() {
-        if self.characteristic != nil {
+        if self.characteristic != nil && self.peripheral.state == CBPeripheralState.Connected {
             var message : [UInt8] = [
                 UInt8(self.heaterBack),
                 UInt8(self.heaterBottom),

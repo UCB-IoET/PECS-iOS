@@ -80,6 +80,10 @@ class ViewController: UIViewController {
 
     // Update SMAP when the state of the chair changes
     @IBAction func stateDidChange(sender: AnyObject) {
+        if self.chair.peripheral.state != CBPeripheralState.Connected {
+            self.performSegueWithIdentifier("showBLEListSegue", sender: self)
+            return
+        }
         self.smapService.fanBack = Int(self.fanBackSlider.value)
         self.smapService.fanBottom = Int(self.fanBottomSlider.value)
         self.smapService.heaterBack = Int(self.heaterBackSlider.value)
@@ -90,6 +94,10 @@ class ViewController: UIViewController {
     
     func updateChairViewFromSmap() {
         if self.chair != nil {
+            if self.chair.peripheral.state != CBPeripheralState.Connected {
+                self.performSegueWithIdentifier("showBLEListSegue", sender: self)
+                return
+            }
             self.fanBackSlider.value = Float(self.smapService.fanBack)
             self.fanBackLabel.text = "\(self.smapService.fanBack)"
 
