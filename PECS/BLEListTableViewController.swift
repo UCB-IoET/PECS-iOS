@@ -69,7 +69,7 @@ class BLEListTableViewController : UITableViewController, QRCodeReaderViewContro
                             let resultPredicate = NSPredicate(format: "name contains[c] %@", name!)
                             let results = self.bleManager.availableChairs.filteredArrayUsingPredicate(resultPredicate)
                             if results.count > 0 {
-                                self.chosenChair = results[0] as! Chair
+                                self.chosenChair = results[0] as? Chair
                                 self.performSegueWithIdentifier("unwindToMain", sender: self)
                             }
                         }
