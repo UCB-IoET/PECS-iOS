@@ -22,7 +22,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="16" y="72" width="120" height="41"/>
+                                    <rect key="frame" x="16" y="20" width="120" height="41"/>
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Back" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UMo-nz-yf0">
@@ -31,7 +31,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="55" y="121" width="39" height="21"/>
+                                    <rect key="frame" x="33" y="69" width="39" height="21"/>
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Bottom" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="60h-uB-LpB">
@@ -40,7 +40,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="55" y="173" width="57" height="21"/>
+                                    <rect key="frame" x="33" y="136" width="57" height="21"/>
                                 </variation>
                             </label>
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="HWy-kb-g1w">
@@ -49,7 +49,7 @@
                                     <rect key="frame" x="151" y="73" width="123" height="31"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="151" y="117" width="123" height="31"/>
+                                    <rect key="frame" x="31" y="98" width="243" height="31"/>
                                 </variation>
                                 <connections>
                                     <action selector="heaterBackSliderChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="TcN-Y8-5ak"/>
@@ -63,7 +63,7 @@
                                     <rect key="frame" x="151" y="125" width="123" height="31"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="151" y="169" width="123" height="31"/>
+                                    <rect key="frame" x="31" y="165" width="243" height="31"/>
                                 </variation>
                                 <connections>
                                     <action selector="heaterBottomSliderChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="7or-Z7-AJc"/>
@@ -77,7 +77,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="16" y="207" width="120" height="41"/>
+                                    <rect key="frame" x="16" y="205" width="120" height="41"/>
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Back" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PfL-uX-lGh">
@@ -86,7 +86,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="55" y="256" width="39" height="21"/>
+                                    <rect key="frame" x="33" y="254" width="39" height="21"/>
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Bottom" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XIg-BQ-s6r">
@@ -95,7 +95,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="55" y="308" width="57" height="21"/>
+                                    <rect key="frame" x="33" y="321" width="57" height="21"/>
                                 </variation>
                             </label>
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Yeh-os-tom">
@@ -104,7 +104,7 @@
                                     <rect key="frame" x="151" y="208" width="123" height="31"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="151" y="252" width="123" height="31"/>
+                                    <rect key="frame" x="31" y="283" width="243" height="31"/>
                                 </variation>
                                 <connections>
                                     <action selector="fanBackSliderChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="yNv-iE-9VD"/>
@@ -118,7 +118,7 @@
                                     <rect key="frame" x="151" y="260" width="123" height="31"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="151" y="304" width="123" height="31"/>
+                                    <rect key="frame" x="31" y="350" width="243" height="31"/>
                                 </variation>
                                 <connections>
                                     <action selector="fanBottomSliderChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="9fw-H0-V12"/>
@@ -135,7 +135,7 @@
                                     <rect key="frame" x="295" y="129" width="32" height="21"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="295" y="173" width="32" height="21"/>
+                                    <rect key="frame" x="295" y="169" width="32" height="21"/>
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kb1-S2-EJH">
@@ -147,7 +147,7 @@
                                     <rect key="frame" x="295" y="212" width="32" height="21"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="295" y="256" width="32" height="21"/>
+                                    <rect key="frame" x="295" y="287" width="32" height="21"/>
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PAS-Rv-6T8">
@@ -159,7 +159,7 @@
                                     <rect key="frame" x="295" y="264" width="32" height="21"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="295" y="308" width="32" height="21"/>
+                                    <rect key="frame" x="295" y="357" width="32" height="21"/>
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sqf-Ce-iL2">
@@ -171,41 +171,11 @@
                                     <rect key="frame" x="295" y="77" width="32" height="21"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="295" y="121" width="32" height="21"/>
-                                </variation>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Selected Chair" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iX2-IW-EIm">
-                                <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="16" y="366" width="113" height="21"/>
-                                </variation>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="None" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ysx-xB-0Sg">
-                                <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="153" y="366" width="139" height="21"/>
+                                    <rect key="frame" x="295" y="102" width="32" height="21"/>
                                 </variation>
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <variation key="default">
-                            <mask key="subviews">
-                                <exclude reference="iX2-IW-EIm"/>
-                                <exclude reference="ysx-xB-0Sg"/>
-                            </mask>
-                        </variation>
-                        <variation key="heightClass=regular-widthClass=compact">
-                            <mask key="subviews">
-                                <include reference="iX2-IW-EIm"/>
-                                <include reference="ysx-xB-0Sg"/>
-                            </mask>
-                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="PECS" id="XA6-ya-YIj">
                         <barButtonItem key="rightBarButtonItem" title="Disconnect" id="fqR-z5-BlJ">
@@ -215,7 +185,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="chairLabel" destination="ysx-xB-0Sg" id="pYz-Wh-Qz0"/>
                         <outlet property="fanBackLabel" destination="Kb1-S2-EJH" id="FcB-nW-Ss2"/>
                         <outlet property="fanBackSlider" destination="Yeh-os-tom" id="lDN-BE-BBF"/>
                         <outlet property="fanBottomLabel" destination="PAS-Rv-6T8" id="RVP-n1-Gcv"/>
@@ -275,6 +244,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Select your Chair" id="43a-Qy-rBi">
+                        <barButtonItem key="leftBarButtonItem" title="QR" id="LtY-eA-O4g">
+                            <connections>
+                                <action selector="scanAction:" destination="eRR-zY-JHE" id="Pg1-t2-Gc1"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Scan" id="FJQ-DB-eXx">
                             <connections>
                                 <action selector="scanForPeripherals:" destination="eRR-zY-JHE" id="Y90-8X-Hzz"/>
@@ -285,7 +259,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rvl-sa-cSE" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="dh5-gn-lgP" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2742" y="549"/>
+            <point key="canvasLocation" x="2907" y="871.5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="c0j-Ej-lAk">

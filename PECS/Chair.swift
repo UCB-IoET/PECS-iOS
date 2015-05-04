@@ -95,12 +95,17 @@ class Chair: NSObject, CBPeripheralDelegate {
     func peripheral(peripheral: CBPeripheral!, didUpdateValueForCharacteristic characteristic: CBCharacteristic!, error: NSError!) {
         println("Received value")
         if characteristic.UUID == ChairCharUUID {
-            var data = [UInt8](count: 5, repeatedValue: 0)
-            characteristic.value.getBytes(&data, length: 5 * sizeof(UInt8))
+            var data = [UInt8](count: 9, repeatedValue: 0)
+            characteristic.value.getBytes(&data, length: 9 * sizeof(UInt8))
+            println(data)
+            var temp = Float((Int32(data[5]) << 8) + Int32(data[6])) / 1000.0
+            var humidity = Float((Int32(data[7]) << 8) + Int32(data[8])) / 1000.0
             self.occupancy = Int(data[4])
             var parameters: [String: AnyObject] = [
                 "macaddr": "12345",
-                "occupancy": self.occupancy == 1 ? true : false
+                "occupancy": self.occupancy == 1 ? true : false,
+                "temperature": temp,
+                "humidity": humidity
             ]
             if !smapService.disableUpdates {
                 NSNotificationCenter.defaultCenter().postNotificationName("kChairStateUpdateFromChair", object: nil);
@@ -117,7 +122,8 @@ class Chair: NSObject, CBPeripheralDelegate {
             }
             
             Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
-                .response { (request, response, data, error) in
+                .responseJSON { (request, response, data, error) in
+                    println(response)
                     if error != nil {
                         println("Error during smap request")
                         println(request)

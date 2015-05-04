@@ -8,12 +8,16 @@
 
 import UIKit
 import CoreBluetooth
+import QRCodeReader
+import AVFoundation
 
-class BLEListTableViewController : UITableViewController {
+
+class BLEListTableViewController : UITableViewController, QRCodeReaderViewControllerDelegate {
 
     let bleManager = (UIApplication.sharedApplication().delegate as! AppDelegate).bleManager
     var chosenChair: Chair?
     var centralManager : CBCentralManager!
+    lazy var reader = QRCodeReaderViewController(metadataObjectTypes: [AVMetadataObjectTypeQRCode])
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +44,29 @@ class BLEListTableViewController : UITableViewController {
     @IBAction func scanForPeripherals(sender: AnyObject!) {
         bleManager.scan()
         self.tableView.reloadData()
+    }
+    
+    @IBAction func scanAction(sender: AnyObject) {
+        // Retrieve the QRCode content
+        // By using the delegate pattern
+        reader.delegate = self
+        
+        // Or by using the closure pattern
+        reader.completionBlock = { (result: String?) in
+            println(result)
+        }
+        
+        // Presents the reader as modal form sheet
+        reader.modalPresentationStyle = .FormSheet
+        presentViewController(reader, animated: true, completion: nil)
+    }
+    
+    func reader(reader: QRCodeReaderViewController, didScanResult result: String) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func readerDidCancel(reader: QRCodeReaderViewController) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func reloadView() {

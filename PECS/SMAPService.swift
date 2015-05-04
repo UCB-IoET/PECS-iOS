@@ -7,14 +7,12 @@
 //
 
 import Foundation
-import Starscream
 import SwiftyJSON
 import UIKit
 import Alamofire
 
 
-class SMAPService: NSObject, WebSocketDelegate {
-    var socket = WebSocket(url: NSURL(scheme: "ws", host: "shell.storm.pm:8078", path: "/republish")!)
+class SMAPService: NSObject {
     var fanBack      : Int
     var fanBottom    : Int
     var heaterBack   : Int
@@ -22,6 +20,7 @@ class SMAPService: NSObject, WebSocketDelegate {
     
     var disableUpdates : Bool
     var disableUpdatesEndTime : dispatch_time_t?
+    var lastReceievedUpdate : Int
 
     override init() {
         fanBack      = 0
@@ -29,49 +28,35 @@ class SMAPService: NSObject, WebSocketDelegate {
         heaterBack   = 0
         heaterBottom = 0
         disableUpdates = false
+        lastReceievedUpdate = -1
         super.init()
-        socket.delegate = self
-        socket.connect()
-        socket.writeString(
-            "uuid = 'a99daf41-f3b3-51a7-97bf-48fb3e7bf130' or " +
-            "uuid = '33ecc20c-e636-58eb-863f-142717105075' or " +
-            "uuid = 'b7ef2e98-2e0a-515b-b534-69894fdddf6f' or " +
-            "uuid = '27e1e889-b749-5cf9-8f90-5cc5f1750ddf'"
-        )
+        self.poll()
+        var timer = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: Selector("poll"), userInfo: nil, repeats: true)
     }
     
-    func websocketDidConnect(ws: WebSocket) {
-        println("websocket is connected")
-    }
-    
-    func websocketDidDisconnect(ws: WebSocket, error: NSError?) {
-        if let e = error {
-            println("websocket is disconnected: \(e.localizedDescription)")
+    func poll() {
+        println("Polling SMAP for updates")
+        Alamofire.request(.GET, "http://shell.storm.pm:38001", parameters: ["macaddr": "12345"], encoding: .URL)
+                 .responseJSON { (request, response, data, error) in
+                    if error != nil {
+                        println("Error during poll to SMAP")
+                        println(request)
+                        println(response)
+                        println(data)
+                        println(error)
+                        return
+                    }
+                    let json = JSON(data!)
+                    let timestamp = json["time"].int
+                    if timestamp > self.lastReceievedUpdate {
+                        self.lastReceievedUpdate = timestamp!
+                        self.fanBack = json["backf"].int!
+                        self.fanBottom = json["bottomf"].int!
+                        self.heaterBack = json["backh"].int!
+                        self.heaterBottom = json["bottomh"].int!
+                        NSNotificationCenter.defaultCenter().postNotificationName("kChairStateUpdateFromSmap", object: nil);
+                    }
         }
-    }
-    
-    func websocketDidReceiveMessage(ws: WebSocket, text: String) {
-        if self.disableUpdates {
-            return
-        }
-        let data = JSON(data: text.dataUsingEncoding(NSUTF8StringEncoding)!)
-        let uuid = data["UUID"].stringValue
-        let value = data["Readings"][0][1]
-        switch uuid {
-            case "a99daf41-f3b3-51a7-97bf-48fb3e7bf130":
-                self.heaterBottom = value.intValue
-            case "33ecc20c-e636-58eb-863f-142717105075":
-                self.heaterBack = value.intValue
-            case "b7ef2e98-2e0a-515b-b534-69894fdddf6f":
-                self.fanBottom = value.intValue
-            case "27e1e889-b749-5cf9-8f90-5cc5f1750ddf":
-                self.fanBack = value.intValue
-            default:
-                println("Found unrecognized UUID \(uuid)")
-            
-        }
-        NSNotificationCenter.defaultCenter().postNotificationName("kChairStateUpdateFromSmap", object: nil);
-        self.update()
     }
     
     func update() {
@@ -83,13 +68,18 @@ class SMAPService: NSObject, WebSocketDelegate {
             "bottomh": Int(self.heaterBottom),
         ]
         Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
-                 .response { (request, response, data, error) in
+                 .responseJSON { (request, response, data, error) in
                     if error != nil {
                         println("Error updating smap")
                         println(request)
                         println(response)
                         println(data)
                         println(error)
+                        return
+                    }
+                    let json = JSON(data!)
+                    if json["time"] != nil {
+                        self.lastReceievedUpdate = json["time"].int!
                     }
         }
         self.disableUpdates = true
@@ -100,9 +90,5 @@ class SMAPService: NSObject, WebSocketDelegate {
                 self.disableUpdates = false
             }
         }
-    }
-    
-    func websocketDidReceiveData(ws: WebSocket, data: NSData) {
-        println("Received data: \(data.length)")
     }
 }

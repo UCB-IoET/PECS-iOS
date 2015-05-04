@@ -19,7 +19,6 @@ class ViewController: UIViewController {
     var tableViewController : BLEListTableViewController?
 
 
-    @IBOutlet weak var chairLabel: UILabel!
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChairViewFromSmap", name: "kChairStateUpdateFromSmap", object: nil);
@@ -37,7 +36,6 @@ class ViewController: UIViewController {
         // If a chair was chosen from the list
         if let chair = source.chosenChair {
             self.chair = chair
-            self.chairLabel.text = chair.name as String
             // Connect to the BLE peripheral associated with the chair
             self.bleManager.centralManager.connectPeripheral(chair.peripheral, options: nil)
         }
@@ -49,7 +47,6 @@ class ViewController: UIViewController {
                 self.bleManager.centralManager.cancelPeripheralConnection(self.chair.peripheral)
                 self.chair = nil
             }
-            self.chairLabel.text = "None"
         }
     }
 

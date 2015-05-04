@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		020EA5191AE998C600454B73 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020EA5181AE998C600454B73 /* BLEManager.swift */; };
 		0216AC5A1AE9ADEB005BC8DD /* SMAPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0216AC591AE9ADEB005BC8DD /* SMAPService.swift */; };
+		024BCC201AEEACF8007439CF /* PECS Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 024BCC1F1AEEACF8007439CF /* PECS Icon.png */; };
+		024BCC221AEEAD12007439CF /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 024BCC211AEEAD12007439CF /* icon.png */; };
 		0273525B1AE812BC0038FCDB /* BLEListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0273525A1AE812BC0038FCDB /* BLEListTableViewController.swift */; };
 		0273525D1AE819740038FCDB /* Chair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0273525C1AE819740038FCDB /* Chair.swift */; };
 		02D374D61AD0A16500167CC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D374D51AD0A16500167CC4 /* AppDelegate.swift */; };
@@ -33,6 +35,8 @@
 /* Begin PBXFileReference section */
 		020EA5181AE998C600454B73 /* BLEManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 		0216AC591AE9ADEB005BC8DD /* SMAPService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMAPService.swift; sourceTree = "<group>"; };
+		024BCC1F1AEEACF8007439CF /* PECS Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PECS Icon.png"; path = "../../../../Desktop/PECS Icon.png"; sourceTree = "<group>"; };
+		024BCC211AEEAD12007439CF /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = ../../../../Desktop/icon.png; sourceTree = "<group>"; };
 		0273525A1AE812BC0038FCDB /* BLEListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEListTableViewController.swift; sourceTree = "<group>"; };
 		0273525C1AE819740038FCDB /* Chair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chair.swift; sourceTree = "<group>"; };
 		02D374D01AD0A16500167CC4 /* PECS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PECS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +113,8 @@
 		02D374D31AD0A16500167CC4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				024BCC211AEEAD12007439CF /* icon.png */,
+				024BCC1F1AEEACF8007439CF /* PECS Icon.png */,
 				02D374D41AD0A16500167CC4 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -232,6 +238,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				024BCC201AEEACF8007439CF /* PECS Icon.png in Resources */,
+				024BCC221AEEAD12007439CF /* icon.png in Resources */,
 				02D374DB1AD0A16500167CC4 /* Main.storyboard in Resources */,
 				02D374E01AD0A16500167CC4 /* LaunchScreen.xib in Resources */,
 				02D374DD1AD0A16500167CC4 /* Images.xcassets in Resources */,
