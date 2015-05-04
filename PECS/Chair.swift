@@ -10,6 +10,7 @@ import Foundation
 import CoreBluetooth
 import UIKit
 import Alamofire
+import SwiftyJSON
 
 
 class Chair: NSObject, CBPeripheralDelegate {
@@ -60,10 +61,28 @@ class Chair: NSObject, CBPeripheralDelegate {
                 UInt8(self.heaterBack),
                 UInt8(self.heaterBottom),
                 UInt8(self.fanBack),
-                UInt8(self.fanBottom)
+                UInt8(self.fanBottom),
+                UInt8(1)
             ]
             var bytes = NSData(bytes: &message, length: message.count)
             println("Sending bytes via bluetooth")
+            println(bytes)
+            self.peripheral.writeValue(bytes, forCharacteristic: self.characteristic, type: CBCharacteristicWriteType.WithoutResponse)
+        }
+    }
+    
+    func sendTime(time: Int) {
+        let unsigned = UInt32(time)
+        if self.characteristic != nil {
+            var message : [UInt8] = [
+                UInt8(unsigned >> 24),
+                UInt8((unsigned >> 16) & 0xFF),
+                UInt8((unsigned >> 8) & 0xFF),
+                UInt8((unsigned >> 8) & 0xFF),
+                UInt8(0)
+            ]
+            var bytes = NSData(bytes: &message, length: message.count)
+            println("Sending time via bluetooth")
             println(bytes)
             self.peripheral.writeValue(bytes, forCharacteristic: self.characteristic, type: CBCharacteristicWriteType.WithoutResponse)
         }
@@ -107,29 +126,37 @@ class Chair: NSObject, CBPeripheralDelegate {
                 "temperature": temp,
                 "humidity": humidity
             ]
-            if !smapService.disableUpdates {
-                NSNotificationCenter.defaultCenter().postNotificationName("kChairStateUpdateFromChair", object: nil);
-                self.heaterBack = Int(data[0])
-                self.heaterBottom = Int(data[1])
-                self.fanBack = Int(data[2])
-                self.fanBottom = Int(data[3])
-                parameters["backf"] = Int(self.fanBack.value)
-                parameters["bottomf"] = Int(self.fanBottom.value)
-                parameters["backh"] = Int(self.heaterBack.value)
-                parameters["bottomh"] = Int(self.heaterBottom.value)
-            } else {
-                println("Ignoring value due to smap delay")
-            }
+            self.heaterBack = Int(data[0])
+            self.heaterBottom = Int(data[1])
+            self.fanBack = Int(data[2])
+            self.fanBottom = Int(data[3])
+            self.smapService.heaterBack = Int(data[0])
+            self.smapService.heaterBottom = Int(data[1])
+            self.smapService.fanBack = Int(data[2])
+            self.smapService.fanBottom = Int(data[3])
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("kChairStateUpdateFromChair", object: nil);
+            parameters["backf"] = Int(self.fanBack.value)
+            parameters["bottomf"] = Int(self.fanBottom.value)
+            parameters["backh"] = Int(self.heaterBack.value)
+            parameters["bottomh"] = Int(self.heaterBottom.value)
             
             Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
                 .responseJSON { (request, response, data, error) in
-                    println(response)
                     if error != nil {
                         println("Error during smap request")
                         println(request)
                         println(response)
                         println(data)
                         println(error)
+                        return;
+                    }
+                    println("Response from SMAP")
+                    println(data);
+                    let json = JSON(data!)
+                    if json["time"] != nil {
+                        self.smapService.lastReceievedUpdate = json["time"].int!
+                        self.sendTime(json["time"].int!)
                     }
             }
         }

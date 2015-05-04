@@ -18,8 +18,6 @@ class SMAPService: NSObject {
     var heaterBack   : Int
     var heaterBottom : Int
     
-    var disableUpdates : Bool
-    var disableUpdatesEndTime : dispatch_time_t?
     var lastReceievedUpdate : Int
 
     override init() {
@@ -27,7 +25,6 @@ class SMAPService: NSObject {
         fanBottom    = 0
         heaterBack   = 0
         heaterBottom = 0
-        disableUpdates = false
         lastReceievedUpdate = -1
         super.init()
         self.poll()
@@ -81,14 +78,6 @@ class SMAPService: NSObject {
                     if json["time"] != nil {
                         self.lastReceievedUpdate = json["time"].int!
                     }
-        }
-        self.disableUpdates = true
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(10 * Double(NSEC_PER_SEC)))
-        self.disableUpdatesEndTime = delayTime
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            if self.disableUpdatesEndTime == delayTime {
-                self.disableUpdates = false
-            }
         }
     }
 }
