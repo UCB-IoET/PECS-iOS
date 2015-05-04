@@ -17,6 +17,7 @@ class BLEListTableViewController : UITableViewController, QRCodeReaderViewContro
     let bleManager = (UIApplication.sharedApplication().delegate as! AppDelegate).bleManager
     var chosenChair: Chair?
     var centralManager : CBCentralManager!
+    var targetNameFromQr: String?
     lazy var reader = QRCodeReaderViewController(metadataObjectTypes: [AVMetadataObjectTypeQRCode])
     
     override func viewDidLoad() {
@@ -53,7 +54,28 @@ class BLEListTableViewController : UITableViewController, QRCodeReaderViewContro
         
         // Or by using the closure pattern
         reader.completionBlock = { (result: String?) in
+            println("QR Code Result")
             println(result)
+            if result != nil {
+                let resultArr = result!.componentsSeparatedByString("?")
+                if resultArr.count > 1 {
+                    let query: String? = resultArr[1]
+                    let queries = query!.componentsSeparatedByString("&")
+                    if queries.count > 1 {
+                        let nameParam: String? = queries[1]
+                        let param = nameParam!.componentsSeparatedByString("=")
+                        if param.count > 1 {
+                            let name: String? = param[1]
+                            let resultPredicate = NSPredicate(format: "name contains[c] %@", name!)
+                            let results = self.bleManager.availableChairs.filteredArrayUsingPredicate(resultPredicate)
+                            if results.count > 0 {
+                                self.chosenChair = results[0] as! Chair
+                                self.performSegueWithIdentifier("unwindToMain", sender: self)
+                            }
+                        }
+                    }
+                }
+            }
         }
         
         // Presents the reader as modal form sheet

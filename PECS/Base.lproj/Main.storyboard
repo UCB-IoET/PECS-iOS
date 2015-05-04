@@ -234,7 +234,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="dh5-gn-lgP" kind="unwind" unwindAction="unwindToMain:" id="Pda-Wn-nss"/>
+                                    <segue destination="dh5-gn-lgP" kind="unwind" identifier="unwindToMain" unwindAction="unwindToMain:" id="Pda-Wn-nss"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
