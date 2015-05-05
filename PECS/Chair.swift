@@ -114,7 +114,7 @@ class Chair: NSObject, CBPeripheralDelegate {
     
     func peripheral(peripheral: CBPeripheral!, didUpdateValueForCharacteristic characteristic: CBCharacteristic!, error: NSError!) {
         println("Received value")
-        if characteristic.UUID == ChairCharUUID {
+        if characteristic.UUID == ChairCharUUID && self.macaddr != nil {
             var data = [UInt8](count: 9, repeatedValue: 0)
             characteristic.value.getBytes(&data, length: 9 * sizeof(UInt8))
             println(data)
