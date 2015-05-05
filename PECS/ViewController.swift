@@ -46,6 +46,7 @@ class ViewController: UIViewController {
             if self.chair != nil {
                 self.bleManager.centralManager.cancelPeripheralConnection(self.chair.peripheral)
                 self.chair = nil
+                self.smapService.macaddr = nil
             }
         }
     }
@@ -81,7 +82,7 @@ class ViewController: UIViewController {
     // Update SMAP when the state of the chair changes
     @IBAction func stateDidChange(sender: AnyObject) {
         if self.chair.peripheral.state != CBPeripheralState.Connected {
-            self.performSegueWithIdentifier("showBLEListSegue", sender: self)
+            self.handleChairDisconnect()
             return
         }
         self.smapService.fanBack = Int(self.fanBackSlider.value)
@@ -95,7 +96,7 @@ class ViewController: UIViewController {
     func updateChairViewFromSmap() {
         if self.chair != nil {
             if self.chair.peripheral.state != CBPeripheralState.Connected {
-                self.performSegueWithIdentifier("showBLEListSegue", sender: self)
+                self.handleChairDisconnect()
                 return
             }
             self.fanBackSlider.value = Float(self.smapService.fanBack)
@@ -110,6 +111,16 @@ class ViewController: UIViewController {
             self.heaterBottomSlider.value = Float(self.smapService.heaterBottom)
             self.heaterBottomLabel.text = "\(self.smapService.heaterBottom)"
         }
+    }
+    
+    func handleChairDisconnect() {
+        let alertController = UIAlertController(title: "Lost connection with chair", message:
+            "Please reconnect by scanning the QR code", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: { action in
+                self.performSegueWithIdentifier("showBLEListSegue", sender: self)
+            }))
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
     
     func updateChairViewFromChair() {

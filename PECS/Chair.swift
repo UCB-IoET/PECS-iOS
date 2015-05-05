@@ -25,6 +25,7 @@ class Chair: NSObject, CBPeripheralDelegate {
     var fanBottom : Int
     var fanBack : Int
     var occupancy : Int
+    var macaddr : String!
     
     let ChairServiceUUID = CBUUID(string: "FFE0")
     let ChairCharUUID = CBUUID(string: "FFE1")
@@ -121,7 +122,7 @@ class Chair: NSObject, CBPeripheralDelegate {
             var humidity = Float((Int32(data[7]) << 8) + Int32(data[8])) / 1000.0
             self.occupancy = Int(data[4])
             var parameters: [String: AnyObject] = [
-                "macaddr": "12345",
+                "macaddr": self.macaddr,
                 "occupancy": self.occupancy == 1 ? true : false,
                 "temperature": temp,
                 "humidity": humidity
@@ -141,6 +142,7 @@ class Chair: NSObject, CBPeripheralDelegate {
             parameters["backh"] = Int(self.heaterBack.value)
             parameters["bottomh"] = Int(self.heaterBottom.value)
             
+            self.smapService.lastReceievedUpdate = Int.max
             Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
                 .responseJSON { (request, response, data, error) in
                     if error != nil {

@@ -18,6 +18,7 @@ class BLEListTableViewController : UITableViewController, QRCodeReaderViewContro
     var chosenChair: Chair?
     var centralManager : CBCentralManager!
     var targetNameFromQr: String?
+    var smapService = (UIApplication.sharedApplication().delegate as! AppDelegate).smapService
     lazy var reader = QRCodeReaderViewController(metadataObjectTypes: [AVMetadataObjectTypeQRCode])
     
     override func viewDidLoad() {
@@ -61,8 +62,10 @@ class BLEListTableViewController : UITableViewController, QRCodeReaderViewContro
                 if resultArr.count > 1 {
                     let query: String? = resultArr[1]
                     let queries = query!.componentsSeparatedByString("&")
-                    if queries.count > 1 {
+                    if queries.count > 2 {
                         let nameParam: String? = queries[1]
+                        let macaddrParam: String? = queries[2]
+                        let macaddr = macaddrParam!.componentsSeparatedByString("=")
                         let param = nameParam!.componentsSeparatedByString("=")
                         if param.count > 1 {
                             let name: String? = param[1]
@@ -70,6 +73,8 @@ class BLEListTableViewController : UITableViewController, QRCodeReaderViewContro
                             let results = self.bleManager.availableChairs.filteredArrayUsingPredicate(resultPredicate)
                             if results.count > 0 {
                                 self.chosenChair = results[0] as? Chair
+                                self.chosenChair?.macaddr = macaddr[1]
+                                self.smapService.macaddr = macaddr[1]
                                 self.performSegueWithIdentifier("unwindToMain", sender: self)
                             }
                         }
