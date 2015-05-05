@@ -68,11 +68,13 @@ class SMAPService: NSObject {
                 "backh": Int(self.heaterBack),
                 "bottomh": Int(self.heaterBottom),
             ]
+            let oldTime = self.lastReceievedUpdate
             self.lastReceievedUpdate = Int.max
             Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
                      .responseJSON { (request, response, data, error) in
                         if error != nil {
                             println("Error updating smap")
+                            self.lastReceievedUpdate = oldTime
                             println(request)
                             println(response)
                             println(data)

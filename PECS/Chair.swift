@@ -114,19 +114,13 @@ class Chair: NSObject, CBPeripheralDelegate {
     
     func peripheral(peripheral: CBPeripheral!, didUpdateValueForCharacteristic characteristic: CBCharacteristic!, error: NSError!) {
         println("Received value")
-        if characteristic.UUID == ChairCharUUID && self.macaddr != nil {
+        if characteristic.UUID == ChairCharUUID {
             var data = [UInt8](count: 9, repeatedValue: 0)
             characteristic.value.getBytes(&data, length: 9 * sizeof(UInt8))
             println(data)
             var temp = Float((Int32(data[5]) << 8) + Int32(data[6])) / 1000.0
             var humidity = Float((Int32(data[7]) << 8) + Int32(data[8])) / 1000.0
             self.occupancy = Int(data[4])
-            var parameters: [String: AnyObject] = [
-                "macaddr": self.macaddr,
-                "occupancy": self.occupancy == 1 ? true : false,
-                "temperature": temp,
-                "humidity": humidity
-            ]
             self.heaterBack = Int(data[0])
             self.heaterBottom = Int(data[1])
             self.fanBack = Int(data[2])
@@ -137,29 +131,39 @@ class Chair: NSObject, CBPeripheralDelegate {
             self.smapService.fanBottom = Int(data[3])
             
             NSNotificationCenter.defaultCenter().postNotificationName("kChairStateUpdateFromChair", object: nil);
-            parameters["backf"] = Int(self.fanBack.value)
-            parameters["bottomf"] = Int(self.fanBottom.value)
-            parameters["backh"] = Int(self.heaterBack.value)
-            parameters["bottomh"] = Int(self.heaterBottom.value)
-            
-            self.smapService.lastReceievedUpdate = Int.max
-            Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
-                .responseJSON { (request, response, data, error) in
-                    if error != nil {
-                        println("Error during smap request")
-                        println(request)
-                        println(response)
-                        println(data)
-                        println(error)
-                        return;
-                    }
-                    println("Response from SMAP")
-                    println(data);
-                    let json = JSON(data!)
-                    if json["time"] != nil {
-                        self.smapService.lastReceievedUpdate = json["time"].int!
-                        self.sendTime(json["time"].int!)
-                    }
+            if self.macaddr != nil {
+                var parameters: [String: AnyObject] = [
+                    "macaddr": self.macaddr,
+                    "occupancy": self.occupancy == 1 ? true : false,
+                    "temperature": temp,
+                    "humidity": humidity
+                ]
+                parameters["backf"] = Int(self.fanBack.value)
+                parameters["bottomf"] = Int(self.fanBottom.value)
+                parameters["backh"] = Int(self.heaterBack.value)
+                parameters["bottomh"] = Int(self.heaterBottom.value)
+                
+                let oldTime = self.smapService.lastReceievedUpdate
+                self.smapService.lastReceievedUpdate = Int.max
+                Alamofire.request(.POST, "http://shell.storm.pm:38001", parameters: parameters, encoding: .JSON)
+                    .responseJSON { (request, response, data, error) in
+                        if error != nil {
+                            println("Error during smap request")
+                            self.smapService.lastReceievedUpdate = oldTime
+                            println(request)
+                            println(response)
+                            println(data)
+                            println(error)
+                            return;
+                        }
+                        println("Response from SMAP")
+                        println(data);
+                        let json = JSON(data!)
+                        if json["time"] != nil {
+                            self.smapService.lastReceievedUpdate = json["time"].int!
+                            self.sendTime(json["time"].int!)
+                        }
+                }
             }
         }
     }
