@@ -136,7 +136,8 @@ class Chair: NSObject, CBPeripheralDelegate {
                     "macaddr": self.macaddr,
                     "occupancy": self.occupancy == 1 ? true : false,
                     "temperature": temp,
-                    "humidity": humidity
+                    "humidity": humidity,
+                    "fromFS": true
                 ]
                 parameters["backf"] = Int(self.fanBack.value)
                 parameters["bottomf"] = Int(self.fanBottom.value)

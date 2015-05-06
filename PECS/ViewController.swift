@@ -89,7 +89,7 @@ class ViewController: UIViewController {
         self.smapService.fanBottom = Int(self.fanBottomSlider.value)
         self.smapService.heaterBack = Int(self.heaterBackSlider.value)
         self.smapService.heaterBottom = Int(self.heaterBottomSlider.value)
-        self.smapService.update()
+        self.smapService.update(false)
         self.chair.updateChair()
     }
     

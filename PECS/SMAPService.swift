@@ -59,7 +59,7 @@ class SMAPService: NSObject {
         }
     }
     
-    func update() {
+    func update(fromChair: Bool) {
         if self.macaddr != nil {
             let parameters: [String: AnyObject] = [
                 "macaddr": self.macaddr,
@@ -67,6 +67,7 @@ class SMAPService: NSObject {
                 "bottomf": Int(self.fanBottom),
                 "backh": Int(self.heaterBack),
                 "bottomh": Int(self.heaterBottom),
+                "fromFS": fromChair
             ]
             let oldTime = self.lastReceievedUpdate
             self.lastReceievedUpdate = Int.max
