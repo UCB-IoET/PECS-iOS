@@ -118,8 +118,8 @@ class Chair: NSObject, CBPeripheralDelegate {
             var data = [UInt8](count: 9, repeatedValue: 0)
             characteristic.value.getBytes(&data, length: 9 * sizeof(UInt8))
             println(data)
-            var temp = Float((Int32(data[5]) << 8) + Int32(data[6])) / 1000.0
-            var humidity = Float((Int32(data[7]) << 8) + Int32(data[8])) / 1000.0
+            var temp = (Int(data[5]) << 8) + Int(data[6])
+            var humidity = (Int(data[7]) << 8) + Int(data[8])
             self.occupancy = Int(data[4])
             self.heaterBack = Int(data[0])
             self.heaterBottom = Int(data[1])
