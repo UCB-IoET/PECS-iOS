@@ -9,46 +9,92 @@
 import UIKit
 import Alamofire
 import CoreBluetooth
+import QRCodeReader
+import AVFoundation
 
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
 
     let bleManager = (UIApplication.sharedApplication().delegate as! AppDelegate).bleManager
     let smapService = (UIApplication.sharedApplication().delegate as! AppDelegate).smapService
     var chair : Chair!
     var tableViewController : BLEListTableViewController?
-
+    lazy var reader = QRCodeReaderViewController(metadataObjectTypes: [AVMetadataObjectTypeQRCode])
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChairViewFromSmap", name: "kChairStateUpdateFromSmap", object: nil);
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateChairViewFromChair", name: "kChairStateUpdateFromChair", object: nil);
-        if self.chair == nil {
-            performSegueWithIdentifier("showBLEListSegue", sender: self)
+        var chairName = NSUserDefaults.standardUserDefaults().objectForKey("chairName") as? String
+        var macaddr = NSUserDefaults.standardUserDefaults().objectForKey("chairID") as? String
+        if chairName != nil && macaddr != nil {
+            let failed = self.connectToChair(chairName!, macaddr: macaddr!)
+            if failed {
+                self.displayQRCodeReader()
+            }
+        } else {
+            self.displayQRCodeReader()
         }
     }
     
-    // Called when the list of nearby chairs view is closed.
-    @IBAction func unwindToMain(segue: UIStoryboardSegue) {
-        self.tableViewController = nil
-        var source: BLEListTableViewController = segue.sourceViewController as! BLEListTableViewController
+    func connectToChair(name: String, macaddr: String) -> Bool {
+        let resultPredicate = NSPredicate(format: "name contains[c] %@", name)
+        let results = self.bleManager.availableChairs.filteredArrayUsingPredicate(resultPredicate)
+        if results.count > 0 {
+            self.chair = results[0] as? Chair
+            self.chair?.macaddr = macaddr
+            self.smapService.macaddr = macaddr
+            return false
+        }
+        return true
+    }
+    
+    func displayQRCodeReader() {
+        // Retrieve the QRCode content
+        // By using the delegate pattern
+        reader.delegate = self
         
-        // If a chair was chosen from the list
-        if let chair = source.chosenChair {
-            self.chair = chair
-            // Connect to the BLE peripheral associated with the chair
-            self.bleManager.centralManager.connectPeripheral(chair.peripheral, options: nil)
-        }
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showBLEListSegue" {
-            if self.chair != nil {
-                self.bleManager.centralManager.cancelPeripheralConnection(self.chair.peripheral)
-                self.chair = nil
-                self.smapService.macaddr = nil
+        // Or by using the closure pattern
+        reader.completionBlock = { (result: String?) in
+            println("QR Code Result")
+            println(result)
+            if result != nil {
+                let resultArr = result!.componentsSeparatedByString("?")
+                if resultArr.count > 1 {
+                    let query: String? = resultArr[1]
+                    let queries = query!.componentsSeparatedByString("&")
+                    if queries.count > 2 {
+                        let nameParam: String? = queries[1]
+                        let macaddrParam: String? = queries[2]
+                        let macaddr = macaddrParam!.componentsSeparatedByString("=")[1]
+                        let param = nameParam!.componentsSeparatedByString("=")
+                        if param.count > 1 {
+                            let name: String? = param[1]
+                            NSUserDefaults.standardUserDefaults().setObject(name, forKey: "chairName")
+                            NSUserDefaults.standardUserDefaults().setObject(macaddr, forKey: "chairID")
+                            self.connectToChair(name!, macaddr: macaddr)
+                        }
+                    }
+                }
             }
         }
+        
+        // Presents the reader as modal form sheet
+        reader.modalPresentationStyle = .FormSheet
+        presentViewController(reader, animated: true, completion: nil)
+    }
+    
+    @IBAction func scanAction(sender: AnyObject) {
+        self.displayQRCodeReader()
+    }
+    
+    
+    func reader(reader: QRCodeReaderViewController, didScanResult result: String) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func readerDidCancel(reader: QRCodeReaderViewController) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,38 +103,41 @@ class ViewController: UIViewController {
     }
 
     @IBOutlet weak var heaterBackSlider: UISlider!
-    @IBOutlet weak var heaterBackLabel: UILabel!
-    @IBAction func heaterBackSliderChanged(sender: AnyObject) {
-        self.heaterBackLabel.text = "\(Int(self.heaterBackSlider.value))"
+    @IBAction func resetBackSlider(sender: AnyObject) {
+        self.heaterBackSlider.value = 0
     }
 
-    @IBOutlet weak var heaterBottomLabel: UILabel!
     @IBOutlet weak var heaterBottomSlider: UISlider!
-    @IBAction func heaterBottomSliderChanged(sender: UISlider) {
-        self.heaterBottomLabel.text = "\(Int(sender.value))"
-    }
-
-    @IBOutlet weak var fanBackLabel: UILabel!
-    @IBOutlet weak var fanBackSlider: UISlider!
-    @IBAction func fanBackSliderChanged(sender: UISlider) {
-        self.fanBackLabel.text = "\(Int(sender.value))"
-    }
-    @IBOutlet weak var fanBottomLabel: UILabel!
-    @IBOutlet weak var fanBottomSlider: UISlider!
-    @IBAction func fanBottomSliderChanged(sender: UISlider) {
-        self.fanBottomLabel.text = "\(Int(sender.value))"
+    @IBAction func resetBottomSlider(sender: AnyObject) {
+        self.heaterBottomSlider.value = 0
     }
 
     // Update SMAP when the state of the chair changes
     @IBAction func stateDidChange(sender: AnyObject) {
+        if self.chair == nil {
+            return
+        }
         if self.chair.peripheral.state != CBPeripheralState.Connected {
             self.handleChairDisconnect()
             return
         }
-        self.smapService.fanBack = Int(self.fanBackSlider.value)
-        self.smapService.fanBottom = Int(self.fanBottomSlider.value)
-        self.smapService.heaterBack = Int(self.heaterBackSlider.value)
-        self.smapService.heaterBottom = Int(self.heaterBottomSlider.value)
+        
+        if self.heaterBackSlider.value > 0 {
+            self.smapService.fanBack = Int(0)
+            self.smapService.heaterBack = Int(self.heaterBackSlider.value)
+        } else {
+            self.smapService.fanBack = Int(-self.heaterBackSlider.value)
+            self.smapService.heaterBack = Int(0)
+        }
+        
+        if self.heaterBottomSlider.value > 0 {
+            self.smapService.fanBottom = Int(0)
+            self.smapService.heaterBottom = Int(self.heaterBottomSlider.value)
+        } else {
+            self.smapService.fanBottom = Int(-self.heaterBottomSlider.value)
+            self.smapService.heaterBottom = Int(0)
+        }
+
         self.smapService.update(false)
         self.chair.updateChair()
     }
@@ -99,17 +148,9 @@ class ViewController: UIViewController {
                 self.handleChairDisconnect()
                 return
             }
-            self.fanBackSlider.value = Float(self.smapService.fanBack)
-            self.fanBackLabel.text = "\(self.smapService.fanBack)"
 
-            self.fanBottomSlider.value = Float(self.smapService.fanBottom)
-            self.fanBottomLabel.text = "\(self.smapService.fanBottom)"
-            
-            self.heaterBackSlider.value = Float(self.smapService.heaterBack)
-            self.heaterBackLabel.text = "\(self.smapService.heaterBack)"
-            
-            self.heaterBottomSlider.value = Float(self.smapService.heaterBottom)
-            self.heaterBottomLabel.text = "\(self.smapService.heaterBottom)"
+            self.heaterBackSlider.value = Float(-self.smapService.heaterBack + self.smapService.fanBack)
+            self.heaterBottomSlider.value = Float(-self.smapService.heaterBottom + self.smapService.fanBottom)
         }
     }
     
@@ -117,25 +158,17 @@ class ViewController: UIViewController {
         let alertController = UIAlertController(title: "Lost connection with chair", message:
             "Please reconnect by scanning the QR code", preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: { action in
-                self.performSegueWithIdentifier("showBLEListSegue", sender: self)
-            }))
+                self.displayQRCodeReader()
+        }))
         
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
     func updateChairViewFromChair() {
         if self.chair != nil {
-            self.fanBackSlider.value = Float(self.chair.fanBack)
-            self.fanBackLabel.text = "\(self.chair.fanBack)"
+            self.heaterBackSlider.value = Float(-self.chair.heaterBack + self.chair.fanBack)
             
-            self.fanBottomSlider.value = Float(self.chair.fanBottom)
-            self.fanBottomLabel.text = "\(self.chair.fanBottom)"
-            
-            self.heaterBackSlider.value = Float(self.chair.heaterBack)
-            self.heaterBackLabel.text = "\(self.chair.heaterBack)"
-            
-            self.heaterBottomSlider.value = Float(self.chair.heaterBottom)
-            self.heaterBottomLabel.text = "\(self.chair.heaterBottom)"
+            self.heaterBottomSlider.value = Float(-self.chair.heaterBottom + self.chair.fanBottom)
         }
     }
 }
